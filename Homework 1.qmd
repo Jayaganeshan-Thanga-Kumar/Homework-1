@@ -1,0 +1,77 @@
+---
+title: "Homework 1"
+author: "Jayaganeshan Thanga Kumar"
+format:
+  pdf:
+    echo: false 
+    warning: false
+---
+
+# Introduction
+
+This is a simple exploratory data analysis of the `mpg` data, readily available in the `ggplot2` R package. The `mpg` data contain car's fuel economy data on 38 best-selling models from 1999 through 2008. It contains a number of variables such as manufacturer, model, engine size (`displ`), year, number of cylinders (`cyl`), type of transmission (`trans`), whether front-wheel, rear-wheel, or 4-wheel (`drv`), miles per gallon in the city (`cty`), miles per gallon on the highway (`hwy`), fuel (`fl`), and car class (`class`). Primarily, I am interested in plotting **engine size versus highway fuel efficiency by car class**.
+
+## Approach
+
+I will bring in the `mpg` data from the `ggplot2` package and use it straight away. I will examine the central variables I am interested in plotting (`displ`, `hwy`, and `class`), perform some **descriptive statistics** on those, and then draw a pretty **scatter plot** with `ggplot2`. It will enable us to visualize how highway mileage is connected with engine size and how different car classes might influence this connection. It is an easy process with the goal of providing **quick insights**.
+
+# Descriptive Statistics
+
+Before constructing the plot, here are some descriptive statistics for the variables I will be graphing: `displ` (engine size), `hwy` (miles per gallon on the highway), and `class` (car class).
+
+```{r}
+library(ggplot2) 
+library(dplyr)
+library(kableExtra)
+
+# Load dataset
+data(mpg)
+mpg_subset <- mpg %>% select(displ, hwy, class)
+
+# Summary statistics for engine displacement (displ)
+cat("--- Summary for Engine Displacement (displ) ---\n") 
+summary(mpg_subset$displ)
+
+# Summary statistics for highway miles per gallon (hwy)
+cat("\n--- Summary for Highway Miles Per Gallon (hwy) ---\n")
+summary(mpg_subset$hwy)
+
+# Frequency table for vehicle class (class)
+cat("\n--- Frequency Table for Vehicle Class (class) ---\n") 
+table(mpg_subset$class)
+
+# Head of the selected dataset structure
+cat("\n--- Head of the selected dataset structure ---\n") 
+kable(head(mpg_subset))
+```
+
+From the statistics above, we can see the range and distribution of **engine displacement** and **highway MPG**. For example, `displ` ranges from **1.6 to 7.0 liters**, while `hwy` ranges from **12 to 44 MPG**. The **class** variable provides categorical information about the vehicle type, showing the counts for each category, with **SUV** and **compact** being the most frequent.
+
+# Plot: Engine Displacement vs. Highway MPG
+
+The following plot is **engine displacement** (`displ`) versus **highway MPG** (`hwy`), colored by vehicle class. Engine displacement normally refers to the sum of the volume swept by all pistons of an engine. Larger engines are less efficient in burning fuel, so I would expect this to be reflected in the plot. **Highway MPG** (Miles Per Gallon) is a typical measure of a car's highway fuel economy.
+
+```{r,fig.width=8,fig.align='center'}
+ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
+  geom_point(alpha = 0.7) +  
+  geom_smooth(method = "lm",se = FALSE, color = "darkblue", linetype = "dashed")+
+  labs(title = "Highway MPG vs. Engine Displacement by Vehicle Class", 
+    x = "Engine Displacement (liters)", 
+    y = "Highway Miles Per Gallon (MPG)", 
+    color = "Vehicle Class") +
+  theme_minimal() + 
+  theme(plot.title = element_text(size = 16, face = "bold", hjust = 0.5),  
+    axis.title = element_text(size = 12, face = "italic"), 
+    legend.title = element_text(face = "bold"), 
+    plot.background = element_rect(fill = "#F8F8F8"), 
+    panel.grid.major = element_line(color = "grey", linetype = "dotted"), 
+    panel.grid.minor = element_blank())
+```
+
+## Plot Description
+
+From the graph, we can see that **highway MPG** is negatively correlated with **engine displacement**. Vehicles with larger engine displacements (larger values of `displ`) will enjoy lower **highway MPG**. This is reasonable, of course, since larger engines will consume a larger amount of fuel to operate.
+
+Also, **class coloring** reveals some interesting trends. **Two-seaters** and **subcompacts** achieve better highway MPG per engine size, while **pickup** and **SUV** cars achieve worse MPG, quite possibly due to their weights being somewhat larger, their frontal area being larger, and their bodies relatively less aerodynamic. A general linear relation plotting this inverse is represented in the dashed blue line.
+
+This graph is good at showing the effect of types of cars on mileage per engine size.
