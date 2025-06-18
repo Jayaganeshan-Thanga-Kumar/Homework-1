@@ -3,6 +3,8 @@ title: "Homework 1"
 author: "Jayaganeshan Thanga Kumar"
 format:
   pdf:
+    echo: false 
+    warning: false
 ---
 
 # Introduction
