@@ -51,7 +51,7 @@ From the statistics above, we can see the range and distribution of **engine dis
 
 The following plot is **engine displacement** (`displ`) versus **highway MPG** (`hwy`), colored by vehicle class. Engine displacement normally refers to the sum of the volume swept by all pistons of an engine. Larger engines are less efficient in burning fuel, so I would expect this to be reflected in the plot. **Highway MPG** (Miles Per Gallon) is a typical measure of a car's highway fuel economy.
 
-```{r,fig.width=8,fig.align='center'}
+```{r}
 ggplot(mpg, aes(x = displ, y = hwy, color = class)) + 
   geom_point(alpha = 0.7) +  
   geom_smooth(method = "lm",se = FALSE, color = "darkblue", linetype = "dashed")+
